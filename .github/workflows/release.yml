@@ -19,6 +19,6 @@ jobs:
           ls bin
         if: runner.os == 'Linux'
       - run: |
-          devenv.com Nemoh.sln /build release
+          devenv.com Nemoh.sln /build Release
           ls Release
         if: runner.os == 'Windows'
