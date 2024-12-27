@@ -12,7 +12,7 @@ ifeq ($(gtest), gfortran)
 	FFLAGS=-cpp -DGNUFORT -O2 -ffree-line-length-none -c
 endif
 
-ifeq ($(ifx), ifx)
+ifeq ($(itest), ifx)
 	FC=ifx
 	FFLAGS=-c -cpp
 endif
