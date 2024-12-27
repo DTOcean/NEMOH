@@ -14,3 +14,4 @@ jobs:
           compiler: intel
       - run: |
           make
+          ls bin
