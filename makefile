@@ -3,7 +3,7 @@
 
 #COMPILATEUR
 gtest=$(shell which gfortran 2> /dev/null | grep -o gfortran)
-itest=$(shell which ifort 2> /dev/null | grep -o ifort)
+itest=$(shell which ifx 2> /dev/null | grep -o ifx)
 
 outputdir=./bin
 
@@ -12,8 +12,8 @@ ifeq ($(gtest), gfortran)
 	FFLAGS=-cpp -DGNUFORT -O2 -ffree-line-length-none -c
 endif
 
-ifeq ($(itest), ifort)
-	FC=ifort
+ifeq ($(ifx), ifx)
+	FC=ifx
 	FFLAGS=-c -cpp
 endif
 
