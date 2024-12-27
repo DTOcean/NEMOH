@@ -7,7 +7,6 @@ jobs:
       matrix:
         os: [ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.os }}
-    concurrency: release
     steps:
       - name: Setup | Checkout repository at workflow sha
         uses: actions/checkout@v4
@@ -20,6 +19,6 @@ jobs:
           ls bin
         if: runner.os == 'Linux'
       - run: |
-          msbuild
+          devenv Nemoh.sln
           ls Release
         if: runner.os == 'Windows'
