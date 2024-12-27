@@ -3,7 +3,10 @@ on: workflow_dispatch
 
 jobs:
   release:
-    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
     concurrency: release
     steps:
       - name: Setup | Checkout repository at workflow sha
@@ -15,3 +18,8 @@ jobs:
       - run: |
           make
           ls bin
+        if: runner.os == 'Linux'
+      - run: |
+          msbuild
+          ls Release
+        if: runner.os == 'Windows'
