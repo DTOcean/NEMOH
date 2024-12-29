@@ -1,5 +1,9 @@
 name: Semantic Release
-on: workflow_dispatch
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - github_actions
 
 jobs:
   release:
@@ -23,4 +27,9 @@ jobs:
         run: |
           devenv.com Nemoh.sln /build "Release|x64"
           ls
+        if: runner.os == 'Windows'
+      - uses: actions/upload-artifact@v4
+        with:
+          name: UpgradeLog
+          path: UpgradeLog.htm
         if: runner.os == 'Windows'
