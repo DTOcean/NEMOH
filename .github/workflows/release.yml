@@ -23,6 +23,9 @@ jobs:
           make
           ls bin
         if: runner.os == 'Linux'
+      - run: '%TEMP%\webimage_extracted\bootstrapper.exe -s --action install --components=intel.oneapi.win.ifort-compiler:intel.oneapi.win.cpp-compiler --eula=accept -p=NEED_VS2017_INTEGRATION=0 -p=NEED_VS2019_INTEGRATION=0 -p=NEED_VS2022_INTEGRATION=1 --log-dir=%TEMP%'
+        shell: cmd
+        if: runner.os == 'Windows'
       - name: Compile | Windows
         run: |
           devenv.com Nemoh.sln /build "Release|x64"
