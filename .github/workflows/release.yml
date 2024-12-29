@@ -14,10 +14,8 @@ jobs:
     steps:
       - name: Setup | Checkout repository at workflow sha
         uses: actions/checkout@v4
-      - uses: fortran-lang/setup-fortran@v1
-        id: setup-fortran
-        with:
-          compiler: intel
+      - name: Setup Intel Fortran
+        uses: i-RIC/install-intelfortran-action@v2
       - name: Compile | Linux
         run: |
           make
