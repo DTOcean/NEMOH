@@ -27,7 +27,7 @@
 			<Tool Name="VFPostBuildEventTool"/>
 			<Tool Name="VFManifestTool" SuppressStartupBanner="true"/>
 		</Configuration>
-		<Configuration Name="Debug|x64" UseCompiler="ifortCompiler">
+		<Configuration Name="Debug|x64" UseCompiler="ifxCompiler">
 			<Tool Name="VFFortranCompilerTool" SuppressStartupBanner="true" DebugInformationFormat="debugEnabled" Optimization="optimizeDisabled" WarnInterfaces="true" Traceback="true" BoundsCheck="true" RuntimeLibrary="rtMultiThreadedDebug" Interfaces="true"/>
 			<Tool Name="VFLinkerTool" LinkIncremental="linkIncrementalNo" SuppressStartupBanner="true" GenerateDebugInformation="true" SubSystem="subSystemConsole" StackReserveSize="1000000000"/>
 			<Tool Name="VFResourceCompilerTool"/>
@@ -78,8 +78,7 @@
 				<File RelativePath=".\Core\SOLVE_BEM_FD_DIRECT.f90"/>
 				<File RelativePath=".\Core\SOLVE_BEM_INFD_DIRECT.f90"/>
 			</Filter>
-			<File RelativePath=".\NEMOH.f90">
-			</File>
+			<File RelativePath=".\NEMOH.f90"/>
 		</Filter>
 	</Files>
 	<Globals/>
