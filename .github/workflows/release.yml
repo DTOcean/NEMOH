@@ -14,11 +14,13 @@ jobs:
         id: setup-fortran
         with:
           compiler: intel
-      - run: |
+      - name: Compile | Linux
+        run: |
           make
           ls bin
         if: runner.os == 'Linux'
-      - run: |
-          devenv.com Nemoh.sln /build Release
-          ls Release
+      - name: Compile | Windows
+        run: |
+          devenv.com Nemoh.sln /build "Release|x64"
+          ls x64/Release
         if: runner.os == 'Windows'
