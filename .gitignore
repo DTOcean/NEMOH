@@ -30,3 +30,10 @@
 *.exe
 *.out
 *.app
+
+# Visual Studio
+.vs
+BuildLog*.htm
+UpgradeLog*.htm
+*.u2d
+*.intermediate.manifest
