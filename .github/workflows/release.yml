@@ -63,6 +63,7 @@ jobs:
         if: steps.cache-install.outputs.cache-hit != 'true'
         run: .github/scripts/install_windows.bat $WINDOWS_HPCKIT_URL $WINDOWS_FORTRAN_COMPONENTS
       - name: build
+        shell: powershell
         run: |
           devenv.com Nemoh.sln /build "Release|x64"
           ls
