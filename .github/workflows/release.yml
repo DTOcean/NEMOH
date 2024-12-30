@@ -5,34 +5,67 @@ on:
     branches:
       - github_actions
 
+env:
+  WINDOWS_HPCKIT_URL: https://registrationcenter-download.intel.com/akdlm/IRC_NAS/a37c30c3-a846-4371-a85d-603e9a9eb94c/intel-oneapi-hpc-toolkit-2025.0.1.48_offline.exe
+  WINDOWS_FORTRAN_COMPONENTS: intel.oneapi.win.ifort-compiler
+  LINUX_FORTRAN_COMPONENTS: intel-oneapi-compiler-fortran
+  CACHE_NUMBER: 5
+
 jobs:
-  release:
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest]
-    runs-on: ${{ matrix.os }}
+  release-linux:
+    runs-on: ubuntu-20.04
+    defaults:
+      run:
+        shell: bash
     steps:
       - name: Setup | Checkout repository at workflow sha
         uses: actions/checkout@v4
-      - uses: fortran-lang/setup-fortran@v1
-        id: setup-fortran
+      - name: setup apt repo
+        run: .github/scripts/setup_apt_repo_linux.sh
+      - name: collect versioned dependencies of apt packages
+        run: .github/scripts/apt_depends.sh $LINUX_FORTRAN_COMPONENTS | tee depends.txt
+      - name: cache install
+        id: cache-install
+        uses: actions/cache@v3
         with:
-          compiler: intel
-      - name: Compile | Linux
+          path: |
+            /opt/intel/oneapi/compiler
+          key: install-${{ env.LINUX_FORTRAN_COMPONENTS }}-${{ hashFiles('**/depends.txt') }}-compiler-${{ hashFiles('**/scripts/cache_exclude_linux.sh') }}
+      - name: install
+        if: steps.cache-install.outputs.cache-hit != 'true'
+        run: .github/scripts/install_linux_apt.sh $LINUX_FORTRAN_COMPONENTS
+      - name: build
         run: |
           make
           ls bin
-        if: runner.os == 'Linux'
-      - run: '${{ runner.temp }}\webimage_extracted\bootstrapper.exe -s --action install --components=intel.oneapi.win.ifort-compiler:intel.oneapi.win.cpp-compiler --eula=accept -p=NEED_VS2017_INTEGRATION=0 -p=NEED_VS2019_INTEGRATION=0 -p=NEED_VS2022_INTEGRATION=1 --log-dir=${{ runner.temp }}'
-        shell: cmd
-        if: runner.os == 'Windows'
-      - name: Compile | Windows
+      - name: exclude unused files from cache
+        if: steps.cache-install.outputs.cache-hit != 'true'
+        run: .github/scripts/cache_exclude_linux.sh
+
+  release-windows:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Setup | Checkout repository at workflow sha
+        uses: actions/checkout@v4
+      - name: cache install
+        id: cache-install
+        uses: actions/cache@v3
+        with:
+          path: |
+              C:\Program Files (x86)\Intel\oneAPI\setvars-vcvarsall.bat
+              C:\Program Files (x86)\Intel\oneAPI\compiler
+          key: install-${{ env.CACHE_NUMBER }}-${{ env.WINDOWS_HPCKIT_URL }}-${{ env.WINDOWS_FORTRAN_COMPONENTS }}-compiler-${{ hashFiles('**/scripts/cache_exclude_windows.sh') }}
+      - name: install
+        if: steps.cache-install.outputs.cache-hit != 'true'
+        run: scripts/install_windows.bat $WINDOWS_HPCKIT_URL $WINDOWS_FORTRAN_COMPONENTS
+      - name: build
         run: |
           devenv.com Nemoh.sln /build "Release|x64"
           ls
-        if: runner.os == 'Windows'
-      - uses: actions/upload-artifact@v4
-        with:
-          name: UpgradeLog
-          path: UpgradeLog.htm
-        if: runner.os == 'Windows'
+      - name: exclude unused files from cache
+        if: steps.cache-install.outputs.cache-hit != 'true'
+        shell: bash
+        run: scripts/cache_exclude_windows.sh
