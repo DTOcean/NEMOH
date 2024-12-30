@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - github_actions
+permissions: read-all
 
 env:
   WINDOWS_HPCKIT_URL: https://registrationcenter-download.intel.com/akdlm/IRC_NAS/a37c30c3-a846-4371-a85d-603e9a9eb94c/intel-oneapi-hpc-toolkit-2025.0.1.48_offline.exe
@@ -30,7 +31,7 @@ jobs:
         with:
           path: |
             /opt/intel/oneapi/compiler
-          key: install-${{ env.LINUX_FORTRAN_COMPONENTS }}-${{ hashFiles('**/depends.txt') }}-compiler-${{ hashFiles('**/scripts/cache_exclude_linux.sh') }}
+          key: install-${{ env.LINUX_FORTRAN_COMPONENTS }}-${{ hashFiles('**/depends.txt') }}-compiler-${{ hashFiles('**/.github/scripts/cache_exclude_linux.sh') }}
       - name: install
         if: steps.cache-install.outputs.cache-hit != 'true'
         run: .github/scripts/install_linux_apt.sh $LINUX_FORTRAN_COMPONENTS
@@ -57,10 +58,10 @@ jobs:
           path: |
               C:\Program Files (x86)\Intel\oneAPI\setvars-vcvarsall.bat
               C:\Program Files (x86)\Intel\oneAPI\compiler
-          key: install-${{ env.CACHE_NUMBER }}-${{ env.WINDOWS_HPCKIT_URL }}-${{ env.WINDOWS_FORTRAN_COMPONENTS }}-compiler-${{ hashFiles('**/scripts/cache_exclude_windows.sh') }}
+          key: install-${{ env.CACHE_NUMBER }}-${{ env.WINDOWS_HPCKIT_URL }}-${{ env.WINDOWS_FORTRAN_COMPONENTS }}-compiler-${{ hashFiles('**/.github/scripts/cache_exclude_windows.sh') }}
       - name: install
         if: steps.cache-install.outputs.cache-hit != 'true'
-        run: scripts/install_windows.bat $WINDOWS_HPCKIT_URL $WINDOWS_FORTRAN_COMPONENTS
+        run: .github/scripts/install_windows.bat $WINDOWS_HPCKIT_URL $WINDOWS_FORTRAN_COMPONENTS
       - name: build
         run: |
           devenv.com Nemoh.sln /build "Release|x64"
@@ -68,4 +69,4 @@ jobs:
       - name: exclude unused files from cache
         if: steps.cache-install.outputs.cache-hit != 'true'
         shell: bash
-        run: scripts/cache_exclude_windows.sh
+        run: .github/scripts/cache_exclude_windows.sh
