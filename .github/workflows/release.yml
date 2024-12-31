@@ -1,10 +1,9 @@
-name: Semantic Release
+name: Create Release Assets
 on:
-  workflow_dispatch:
-  push:
-    branches:
-      - github_actions
-permissions: read-all
+  release:
+    types: [published]
+permissions: 
+  contents: write
 
 env:
   WINDOWS_HPCKIT_URL: https://registrationcenter-download.intel.com/akdlm/IRC_NAS/a37c30c3-a846-4371-a85d-603e9a9eb94c/intel-oneapi-hpc-toolkit-2025.0.1.48_offline.exe
@@ -13,7 +12,7 @@ env:
   CACHE_NUMBER: 5
 
 jobs:
-  release-linux:
+  linux:
     runs-on: ubuntu-20.04
     defaults:
       run:
@@ -38,12 +37,15 @@ jobs:
       - name: Build
         run: |
           make
-          ls bin
+          tar czf nemoh-linux-${{ github.event.release.tag_name }}.tar.gz bin
+          gh release upload ${{github.event.release.tag_name}} nemoh-linux-${{ github.event.release.tag_name }}.tar.gz
+        env:
+          GITHUB_TOKEN: ${{ github.TOKEN }}
       - name: Exclude unused files from cache
         if: steps.cache-install.outputs.cache-hit != 'true'
         run: .github/scripts/cache_exclude_linux.sh
 
-  release-windows:
+  windows:
     runs-on: windows-latest
     defaults:
       run:
@@ -64,7 +66,11 @@ jobs:
         run: .github/scripts/install_windows.bat $WINDOWS_HPCKIT_URL $WINDOWS_FORTRAN_COMPONENTS
       - name: Build
         run: .github/scripts/build_windows.bat
-      - run: ls
+      - run: |
+          7z a -tzip nemoh-win64-${{ github.event.release.tag_name }}.zip x64
+          gh release upload ${{github.event.release.tag_name}} nemoh-win64-${{ github.event.release.tag_name }}.zip
+        env:
+          GITHUB_TOKEN: ${{ github.TOKEN }}
       - name: Exclude unused files from cache
         if: steps.cache-install.outputs.cache-hit != 'true'
         shell: bash
