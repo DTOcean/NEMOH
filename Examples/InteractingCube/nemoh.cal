@@ -1,0 +1,25 @@
+--- Environment ------------------------------------------------------------------------------------------------------------------
+1025.00				! RHO 			! KG/M**3 	! Fluid specific volume 
+9.82				! G				! M/S**2	! Gravity
+50.0				! DEPTH			! M			! Water depth
+0.	0.				! XEFF YEFF		! M			! Wave measurement point
+--- Description of floating bodies -----------------------------------------------------------------------------------------------
+1				! Number of bodies
+--- Body [0] ----------------------------------------------
+.\mesh\cube.dat			! Name of mesh file
+20	5					! Number of points and number of panels 
+1						! Number of degrees of freedom
+1 0 0 1 0 0 0			! DOF type(1x1) direction(3x1) position(3x1)
+1						! Number of generalised forces
+1 0 0 1 0 0 0			! DOF type(1x1) direction(3x1) position(3x1)
+0						! Number of lines of additional information
+--- Load cases to be solved -------------------------------------------------------------------------------------------------------
+10.0 0.1 1.1			! Number of wave frequencies, Min, and Max (rad/s)
+1 0.0 0.0				! Number of wave angles, Min, and Max (deg)
+--- Post processing ---------------------------------------------------------------------------------------------------------------
+0	0.01	10.					! IRF 						! IRF calculation (0 for no calculation), time step and duration
+0								! Show pressure
+0	0.	180.					! Kochin function 			! Number of directions of calculation (0 for no calculations), Min and Max (degrees)
+0	2	1000.	2.				! Free surface elevation 	! Number of points in x direction (0 for no calcutions) and y direction and dimensions of domain in x and y direction
+3.414213562373095	10	10		! Cylindrical surface 		! Radius (0 for no calc), Number of points in theta direction, Number of points in z direction
+--- End of file -------------------------------------------------------------------------------------------------------------------
