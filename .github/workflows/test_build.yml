@@ -35,10 +35,12 @@ jobs:
         run: .github/scripts/install_linux_apt.sh $LINUX_FORTRAN_COMPONENTS
       - name: Build
         run: .github/scripts/build_linux.sh
+      - name: Tar files
+        run: tar -cvf nemoh.tar bin
       - uses: actions/upload-artifact@v4
         with:
           name: nemoh-linux
-          path: bin
+          path: nemoh.tar
       - name: Exclude unused files from cache
         if: steps.cache-install.outputs.cache-hit != 'true'
         run: .github/scripts/cache_exclude_linux.sh
@@ -84,7 +86,8 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: nemoh-linux
-          path: bin
+      - name: Untar files
+        run: tar -xf nemoh.tar -C bin
       - name: Test
         run: |
           $GITHUB_WORKSPACE/bin/preProc
