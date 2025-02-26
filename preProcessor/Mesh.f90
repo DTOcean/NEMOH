@@ -160,6 +160,7 @@
         READ(10,*) 
         DO c=1,Nbodies
             READ(10,*) meshfile
+            WRITE(*,*) meshfile
             tX=0.
             tY=0.
             READ(10,*) meshfile
