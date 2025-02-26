@@ -9,7 +9,6 @@ env:
   WINDOWS_HPCKIT_URL: https://registrationcenter-download.intel.com/akdlm/IRC_NAS/a37c30c3-a846-4371-a85d-603e9a9eb94c/intel-oneapi-hpc-toolkit-2025.0.1.48_offline.exe
   WINDOWS_FORTRAN_COMPONENTS: intel.oneapi.win.ifort-compiler
   LINUX_FORTRAN_COMPONENTS: intel-oneapi-compiler-fortran
-  CACHE_NUMBER: 5
 
 jobs:
   linux:
@@ -53,16 +52,7 @@ jobs:
     steps:
       - name: Setup | Checkout repository at workflow sha
         uses: actions/checkout@v4
-      - name: Cache | Install
-        id: cache-install
-        uses: actions/cache@v3
-        with:
-          path: |
-              C:\Program Files (x86)\Intel\oneAPI\setvars-vcvarsall.bat
-              C:\Program Files (x86)\Intel\oneAPI\compiler
-          key: install-${{ env.CACHE_NUMBER }}-${{ env.WINDOWS_HPCKIT_URL }}-${{ env.WINDOWS_FORTRAN_COMPONENTS }}-compiler-${{ hashFiles('**/.github/scripts/cache_exclude_windows.sh') }}
       - name: Intel Fortran Install
-        if: steps.cache-install.outputs.cache-hit != 'true'
         run: .github/scripts/install_windows.bat $WINDOWS_HPCKIT_URL $WINDOWS_FORTRAN_COMPONENTS
       - name: Build
         run: .github/scripts/build_windows.bat
@@ -71,7 +61,3 @@ jobs:
           gh release upload ${{github.event.release.tag_name}} nemoh-win64-${{ github.event.release.tag_name }}.zip
         env:
           GITHUB_TOKEN: ${{ github.TOKEN }}
-      - name: Exclude unused files from cache
-        if: steps.cache-install.outputs.cache-hit != 'true'
-        shell: bash
-        run: .github/scripts/cache_exclude_windows.sh
