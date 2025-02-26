@@ -80,6 +80,7 @@ jobs:
       run:
         shell: bash
     steps:
+      - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
           name: nemoh-linux
@@ -97,6 +98,7 @@ jobs:
       run:
         shell: bash
     steps:
+      - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
         with:
           name: nemoh-win64
