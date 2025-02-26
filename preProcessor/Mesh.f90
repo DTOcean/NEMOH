@@ -161,10 +161,12 @@
         DO c=1,Nbodies
             READ(10,*)
             READ(10,'(A)') meshfile
-            lfile=LNBLNK(meshfile)
+            ! lfile=LNBLNK(meshfile)
             WRITE(*,*) meshfile
-            WRITE(*,*) meshfile(1:lfile)
-            OPEN(11,FILE=meshfile(1:lfile))
+            lfile = SCAN(meshfile, '!')
+            meshfile = meshfile(1:lfile-1)
+            WRITE(*,*) meshfile, TRIM(meshfile)
+            OPEN(11,FILE=TRIM(meshfile))
             READ(11,*) M,N
             IF ((c.GT.1).AND.(N.NE.Mesh%Isym)) THEN
                 WRITE(*,*) ' Error: there is an inconsistency in the mesh files regarding the xOz symmetries'  
