@@ -6,7 +6,7 @@
 --- Description of floating bodies -----------------------------------------------------------------------------------------------
 1				! Number of bodies
 --- Body [0] ----------------------------------------------
-.\mesh\cube.dat			! Name of mesh file
+./mesh/cube.dat			! Name of mesh file
 20	5					! Number of points and number of panels 
 1						! Number of degrees of freedom
 1 0 0 1 0 0 0			! DOF type(1x1) direction(3x1) position(3x1)
