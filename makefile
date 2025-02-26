@@ -14,7 +14,7 @@ endif
 
 ifeq ($(itest), ifx)
 	FC=ifx
-	FFLAGS=-c -cpp
+	FFLAGS=-c -cpp -static-intel
 endif
 
 #SOURCES FORTRAN Mesh(modules de maillage)
