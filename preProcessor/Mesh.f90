@@ -164,6 +164,7 @@
             tY=0.
             READ(10,*) meshfile
             lfile=LNBLNK(meshfile)
+            WRITE(*,*) meshfile
             WRITE(*,*) meshfile(1:lfile)
             OPEN(11,FILE=meshfile(1:lfile))
             READ(11,*) M,N
