@@ -2,7 +2,10 @@ name: Test Build Assets
 on:
   push:
     branches: 
-      - test_artefacts
+      - velocity_potential_over_cylinder
+  pull_request: 
+    branches: 
+      - velocity_potential_over_cylinder
 
 env:
   WINDOWS_HPCKIT_URL: https://registrationcenter-download.intel.com/akdlm/IRC_NAS/a37c30c3-a846-4371-a85d-603e9a9eb94c/intel-oneapi-hpc-toolkit-2025.0.1.48_offline.exe
