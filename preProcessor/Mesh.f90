@@ -162,7 +162,13 @@
             READ(10,*)
             READ(10,'(A)') meshfile
             lfile = SCAN(meshfile, '!')
-            meshfile = meshfile(1:lfile-1)
+            IF (lfile > 0) THEN
+                meshfile = meshfile(1:lfile-1)
+            END IF
+            lfile = SCAN(meshfile, ACHAR(9) )
+            IF (lfile > 0) THEN
+                meshfile = meshfile(1:lfile-1)
+            END IF
             meshfile = TRIM(meshfile)
             lfile = LNBLNK(meshfile)
             WRITE(*,*) meshfile(1:lfile), lfile
