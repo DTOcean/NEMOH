@@ -161,17 +161,21 @@
         DO c=1,Nbodies
             READ(10,*)
             READ(10,'(A)') meshfile
-            lfile = SCAN(meshfile, '!')
+            
+            ! Isolate the path part of the meshfile string
+            lfile = SCAN(meshfile, '!') ! Comments
             IF (lfile > 0) THEN
                 meshfile = meshfile(1:lfile-1)
             END IF
-            lfile = SCAN(meshfile, ACHAR(9) )
+            
+            lfile = SCAN(meshfile, ACHAR(9) ) ! Tabs
             IF (lfile > 0) THEN
                 meshfile = meshfile(1:lfile-1)
             END IF
-            meshfile = TRIM(meshfile)
+            
+            meshfile = TRIM(meshfile) ! Whitespace
+            
             lfile = LNBLNK(meshfile)
-            WRITE(*,*) meshfile(1:lfile), lfile
             OPEN(11,FILE=meshfile(1:lfile))
             READ(11,*) M,N
             IF ((c.GT.1).AND.(N.NE.Mesh%Isym)) THEN

@@ -64,38 +64,38 @@ jobs:
           $GITHUB_WORKSPACE/bin/postProc
         working-directory: ./Examples/InteractingCube
 
-  # windows:
-  #   runs-on: windows-latest
-  #   defaults:
-  #     run:
-  #       shell: bash
-  #   steps:
-  #     - name: Setup | Checkout repository at workflow sha
-  #       uses: actions/checkout@v4
-  #     - name: Intel Fortran Install
-  #       run: .github/scripts/install_windows.bat $WINDOWS_HPCKIT_URL $WINDOWS_FORTRAN_COMPONENTS
-  #     - name: Build
-  #       run: .github/scripts/build_windows.bat
-  #     - uses: actions/upload-artifact@v4
-  #       with:
-  #         name: nemoh-win64
-  #         path: x64
+  windows:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Setup | Checkout repository at workflow sha
+        uses: actions/checkout@v4
+      - name: Intel Fortran Install
+        run: .github/scripts/install_windows.bat $WINDOWS_HPCKIT_URL $WINDOWS_FORTRAN_COMPONENTS
+      - name: Build
+        run: .github/scripts/build_windows.bat
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nemoh-win64
+          path: x64
 
-  # windows-test:
-  #   needs: windows
-  #   runs-on: windows-latest
-  #   defaults:
-  #     run:
-  #       shell: bash
-  #   steps:
-  #     - uses: actions/checkout@v4
-  #     - uses: actions/download-artifact@v4
-  #       with:
-  #         name: nemoh-win64
-  #         path: x64
-  #     - name: Test
-  #       run: |
-  #         $GITHUB_WORKSPACE/x64/Release/preProcessor.exe
-  #         $GITHUB_WORKSPACE/x64/Release/Solver.exe
-  #         $GITHUB_WORKSPACE/x64/Release/postProcessor.exe
-  #       working-directory: ./Examples/InteractingCube
+  windows-test:
+    needs: windows
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: nemoh-win64
+          path: x64
+      - name: Test
+        run: |
+          $GITHUB_WORKSPACE/x64/Release/preProcessor.exe
+          $GITHUB_WORKSPACE/x64/Release/Solver.exe
+          $GITHUB_WORKSPACE/x64/Release/postProcessor.exe
+        working-directory: ./Examples/InteractingCube
