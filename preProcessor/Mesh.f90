@@ -1,6 +1,6 @@
 !--------------------------------------------------------------------------------------
 !
-!   Copyright 2014 Ecole Centrale de Nantes, 1 rue de la Noë, 44300 Nantes, France
+!   Copyright 2014 Ecole Centrale de Nantes, 1 rue de la Noï¿½, 44300 Nantes, France
 !
 !   Licensed under the Apache License, Version 2.0 (the "License");
 !   you may not use this file except in compliance with the License.
@@ -163,7 +163,8 @@
             tX=0.
             tY=0.
             READ(10,*) meshfile
-              lfile=LNBLNK(meshfile)
+            lfile=LNBLNK(meshfile)
+            WRITE(*,*) meshfile(1:lfile)
             OPEN(11,FILE=meshfile(1:lfile))
             READ(11,*) M,N
             IF ((c.GT.1).AND.(N.NE.Mesh%Isym)) THEN
