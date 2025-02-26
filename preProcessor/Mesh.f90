@@ -157,13 +157,10 @@
         READ(10,*)
         READ(10,*)
         READ(10,*)
-        READ(10,*) 
+        READ(10,*)
         DO c=1,Nbodies
-            READ(10,*) meshfile
-            WRITE(*,*) meshfile
-            tX=0.
-            tY=0.
-            READ(10,*) meshfile
+            READ(10,*)
+            READ(10,'(A)') meshfile
             lfile=LNBLNK(meshfile)
             WRITE(*,*) meshfile
             WRITE(*,*) meshfile(1:lfile)
@@ -176,6 +173,8 @@
                 Mesh%Isym=N
             END IF          
             READ(10,*) M,N
+            tX=0.
+            tY=0.
             DO i=1,M
                 READ(11,*) d,(Mesh%X(j,Npoints+i),j=1,3)
                 Mesh%X(1,Npoints+i)=Mesh%X(1,Npoints+i)+tX
