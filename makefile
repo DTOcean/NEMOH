@@ -15,6 +15,7 @@ endif
 ifeq ($(itest), ifx)
 	FC=ifx
 	FFLAGS=-c -cpp
+	LDFLAGS=-static-intel
 endif
 
 #SOURCES FORTRAN Mesh(modules de maillage)
@@ -150,13 +151,13 @@ bin:
 msh:	mesh
 #Rules to Build MAIN EXECUTABLE  (dependances et regle d'execution)
 mesh:	$(OBJM) 
-		$(FC) -static-intel -o $(outputdir)/mesh $(OBJM2)
+		$(FC) $(LDFLAGS) -o $(outputdir)/mesh $(OBJM2)
 #
 #Build preProc executable
 pre:	preProc
 #Rules to Build MAIN EXECUTABLE  (dependances et regle d'execution)
 preProc:	$(OBJP) 
-		$(FC) -static-intel -o $(outputdir)/preProc $(OBJP2)
+		$(FC) $(LDFLAGS) -o $(outputdir)/preProc $(OBJP2)
 
 
 #
@@ -164,7 +165,7 @@ preProc:	$(OBJP)
 solver:	Nemoh
 #Rules to Build MAIN EXECUTABLE  (dependances et regle d'execution)
 Nemoh:	$(OBJS) 
-		$(FC) -static-intel -o $(outputdir)/solver $(OBJS2)
+		$(FC) $(LDFLAGS) -o $(outputdir)/solver $(OBJS2)
 
 
 #
@@ -172,7 +173,7 @@ Nemoh:	$(OBJS)
 post:	postProc
 #Rules to Build MAIN EXECUTABLE  (dependances et regle d'execution)
 postProc:	$(OBJO) 
-		$(FC) -static-intel -o $(outputdir)/postProc $(OBJO2)
+		$(FC) $(LDFLAGS) -o $(outputdir)/postProc $(OBJO2)
 
 # Rules for .f comiplation
 .f.o:
