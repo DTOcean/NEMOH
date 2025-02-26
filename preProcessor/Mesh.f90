@@ -164,12 +164,12 @@
             
             ! Isolate the path part of the meshfile string
             lfile = SCAN(meshfile, '!') ! Comments
-            IF (lfile > 0) THEN
+            IF (lfile > 1) THEN
                 meshfile = meshfile(1:lfile-1)
             END IF
             
             lfile = SCAN(meshfile, ACHAR(9) ) ! Tabs
-            IF (lfile > 0) THEN
+            IF (lfile > 1) THEN
                 meshfile = meshfile(1:lfile-1)
             END IF
             
