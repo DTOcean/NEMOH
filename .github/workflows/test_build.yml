@@ -84,6 +84,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: nemoh-linux
+          path: bin
       - name: Test
         run: |
           ./bin/preProc
@@ -102,6 +103,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: nemoh-win64
+          path: x64
       - name: Test
         run: |
           ./x64/Release/preProcessor.exe
