@@ -1,0 +1,108 @@
+name: Test Build Assets
+on:
+  push:
+    branches: 
+      - test_artefacts
+
+env:
+  WINDOWS_HPCKIT_URL: https://registrationcenter-download.intel.com/akdlm/IRC_NAS/a37c30c3-a846-4371-a85d-603e9a9eb94c/intel-oneapi-hpc-toolkit-2025.0.1.48_offline.exe
+  WINDOWS_FORTRAN_COMPONENTS: intel.oneapi.win.ifort-compiler
+  LINUX_FORTRAN_COMPONENTS: intel-oneapi-compiler-fortran
+  CACHE_NUMBER: 5
+
+jobs:
+  linux:
+    runs-on: ubuntu-20.04
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Setup | Checkout repository at workflow sha
+        uses: actions/checkout@v4
+      - name: Setup | Setup apt repo
+        run: .github/scripts/setup_apt_repo_linux.sh
+      - name: Cache | Collect versioned dependencies of apt packages
+        run: .github/scripts/apt_depends.sh $LINUX_FORTRAN_COMPONENTS | tee depends.txt
+      - name: Cache | Install
+        id: cache-install
+        uses: actions/cache@v3
+        with:
+          path: |
+            /opt/intel/oneapi/compiler
+          key: install-${{ env.LINUX_FORTRAN_COMPONENTS }}-${{ hashFiles('**/depends.txt') }}-compiler-${{ hashFiles('**/.github/scripts/cache_exclude_linux.sh') }}
+      - name: Intel Fortran Install
+        if: steps.cache-install.outputs.cache-hit != 'true'
+        run: .github/scripts/install_linux_apt.sh $LINUX_FORTRAN_COMPONENTS
+      - name: Build
+        run: .github/scripts/build_linux.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nemoh-linux
+          path: bin
+      - name: Exclude unused files from cache
+        if: steps.cache-install.outputs.cache-hit != 'true'
+        run: .github/scripts/cache_exclude_linux.sh
+
+  windows:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Setup | Checkout repository at workflow sha
+        uses: actions/checkout@v4
+      - name: Cache | Install
+        id: cache-install
+        uses: actions/cache@v3
+        with:
+          path: |
+              C:\Program Files (x86)\Intel\oneAPI\setvars-vcvarsall.bat
+              C:\Program Files (x86)\Intel\oneAPI\compiler
+          key: install-${{ env.CACHE_NUMBER }}-${{ env.WINDOWS_HPCKIT_URL }}-${{ env.WINDOWS_FORTRAN_COMPONENTS }}-compiler-${{ hashFiles('**/.github/scripts/cache_exclude_windows.sh') }}
+      - name: Intel Fortran Install
+        if: steps.cache-install.outputs.cache-hit != 'true'
+        run: .github/scripts/install_windows.bat $WINDOWS_HPCKIT_URL $WINDOWS_FORTRAN_COMPONENTS
+      - name: Build
+        run: .github/scripts/build_windows.bat
+      - uses: actions/upload-artifact@v4
+        with:
+          name: nemoh-win64
+          path: x64
+      - name: Exclude unused files from cache
+        if: steps.cache-install.outputs.cache-hit != 'true'
+        shell: bash
+        run: .github/scripts/cache_exclude_windows.sh
+
+  linux-test:
+    needs: linux
+    runs-on: ubuntu-20.04
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: nemoh-linux
+      - name: Test
+        run: |
+          ./bin/preProc
+          ./bin/solver
+          ./bin/postProc
+        working-directory: ./Examples/InteractingCube
+
+  windows-test:
+    needs: windows
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: nemoh-win64
+      - name: Test
+        run: |
+          ./x64/Release/preProcessor.exe
+          ./x64/Release/Solver.exe
+          ./x64/Release/postProcessor.exe
+        working-directory: ./Examples/InteractingCube
