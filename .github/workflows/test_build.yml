@@ -87,9 +87,7 @@ jobs:
         with:
           name: nemoh-linux
       - name: Untar files
-        run: |
-          mkdir bin
-          tar -xf nemoh.tar -C bin
+        run: tar -xf nemoh.tar
       - name: Test
         run: |
           $GITHUB_WORKSPACE/bin/preProc
