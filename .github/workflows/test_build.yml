@@ -87,9 +87,9 @@ jobs:
           path: bin
       - name: Test
         run: |
-          ./bin/preProc
-          ./bin/solver
-          ./bin/postProc
+          $GITHUB_WORKSPACE/bin/preProc
+          $GITHUB_WORKSPACE/bin/solver
+          $GITHUB_WORKSPACE/bin/postProc
         working-directory: ./Examples/InteractingCube
 
   windows-test:
@@ -106,7 +106,7 @@ jobs:
           path: x64
       - name: Test
         run: |
-          ./x64/Release/preProcessor.exe
-          ./x64/Release/Solver.exe
-          ./x64/Release/postProcessor.exe
+          $GITHUB_WORKSPACE/x64/Release/preProcessor.exe
+          $GITHUB_WORKSPACE/x64/Release/Solver.exe
+          $GITHUB_WORKSPACE/x64/Release/postProcessor.exe
         working-directory: ./Examples/InteractingCube
